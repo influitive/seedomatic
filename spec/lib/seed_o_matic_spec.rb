@@ -13,5 +13,20 @@ describe SeedOMatic do
         subject
       }
     end
+
+    context "specified directory" do
+      let(:opts) { { :dir => 'spec/support/seed_directory' } }
+
+      specify {
+        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'dir1'))
+        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'dir2'))
+
+        subject
+      }
+    end
+
+    context "no options (assumed config / seeds directory)" do
+
+    end
   end
 end

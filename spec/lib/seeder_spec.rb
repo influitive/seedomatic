@@ -16,7 +16,7 @@ describe SeedOMatic::Seeder do
       context "single item" do
         let(:items) { [{'name' => 'foo'}] }
         specify {
-          MyModel.should_receive(:create).with(hash_including('name' => 'foo'))
+          MyModel.should_receive(:create).and_return(MyModel.new)
           subject
         }
       end
@@ -24,10 +24,14 @@ describe SeedOMatic::Seeder do
       context "multiple items" do
         let(:items) { [{'name' => 'foo'}, {'name' => 'bar'} ] }
         specify {
-          MyModel.should_receive(:create).with(hash_including('name' => 'foo'))
-          MyModel.should_receive(:create).with(hash_including('name' => 'bar'))
+          MyModel.should_receive(:create).twice.and_return(MyModel.new)
           subject
         }
+        it "should set fields properly" do
+          subject
+          MyModel[0].name.should == 'foo'
+          MyModel[1].name.should == 'bar'
+        end
       end
     end
 
@@ -36,7 +40,7 @@ describe SeedOMatic::Seeder do
         let(:match_on) { 'code' }
 
         specify {
-          MyModel.should_receive(:find_or_create_by_code).with('uniquecode')
+          MyModel.should_receive(:find_or_create_by_code).with('uniquecode').and_return(MyModel.new)
           subject
         }
       end
@@ -44,10 +48,53 @@ describe SeedOMatic::Seeder do
         let(:match_on) { ['code', 'code_category'] }
 
         specify {
-          MyModel.should_receive(:find_or_create_by_code_and_code_category).with('uniquecode', 'more_unique')
+          MyModel.should_receive(:find_or_create_by_code_and_code_category).with('uniquecode', 'more_unique').and_return(MyModel.new)
           subject
         }
       end
+    end
+  end
+
+  describe "create_method" do
+    subject { seeder.send(:create_method) }
+
+    context "no matching fields" do
+      let(:match_on) { nil }
+      it { should == 'create' }
+    end
+
+    context "one matching field" do
+      let(:match_on) { 'code' }
+      it { should == 'find_or_create_by_code' }
+    end
+
+    context "multiple matching fields" do
+      let(:match_on) { ['code', 'code_category'] }
+      it { should == 'find_or_create_by_code_and_code_category' }
+    end
+  end
+
+  describe "create_args" do
+    subject { seeder.send(:create_args, {'code' => 1, 'code_category' => 2}) }
+
+    context "no matching fields" do
+      let(:match_on) { nil }
+      it { should == [] }
+    end
+
+    context "one matching field" do
+      let(:match_on) { 'code' }
+      it { should == [1] }
+    end
+
+    context "multiple matching fields" do
+      let(:match_on) { ['code', 'code_category'] }
+      it { should == [1,2] }
+    end
+
+    context "order sensitivity" do
+      let(:match_on) { ['code_category', 'code'] }
+      it { should == [2,1] }
     end
   end
 
