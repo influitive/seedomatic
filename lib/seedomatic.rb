@@ -1,5 +1,8 @@
 require "seedomatic/version"
 
-module Seedomatic
-  # Your code goes here...
+module SeedOMatic
+  autoload :Seeder, 'seedomatic/seeder'
+  autoload :Runner, 'seedomatic/runner'
+
+  extend Runner
 end
