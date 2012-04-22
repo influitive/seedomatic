@@ -1,4 +1,4 @@
-require 'yaml'
+
 
 module SeedOMatic
   module Runner
