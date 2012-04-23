@@ -28,7 +28,7 @@ specify another directory when you run your seeds. Here's the structure of a typ
 
 Running seeds is as easy as calling:
 
-   SeedOMatic.run
+    SeedOMatic.run
 
 This will look through the directory `config/seeds`, and import every file in that directory.
 
