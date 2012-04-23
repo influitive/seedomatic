@@ -38,11 +38,7 @@ module SeedOMatic
 
     def load_file(file)
       data = YAML.load_file(file).map do |k, v|
-        {
-          :model_name => k,
-          :match_on => v['match_on'],
-          :items => v['items']
-        }
+        v.merge(:model_name => k).with_indifferent_access
       end
     end
 

@@ -41,6 +41,16 @@ describe SeedOMatic do
         subject
       }
     end
+
+    describe "json data" do
+      let(:opts) { { :file => 'spec/support/single_model.json' } }
+
+      specify {
+        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'model_name',
+                                                                    :items => ['name' => 'Name 1', 'code' => 'code_1'])).and_return(mock_seeder)
+        subject
+      }
+    end
   end
 
   describe "should_import?" do
