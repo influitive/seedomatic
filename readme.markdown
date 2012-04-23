@@ -59,7 +59,5 @@ You can load tags using the `tagged_with`, and `not_tagged_with` options:
 
 ## TODO
 
-* Support for JSON formatted seed files
-* Allowing multiple models defined per file
 * Referencing lookups from other seed files
 * Selective updating of data
