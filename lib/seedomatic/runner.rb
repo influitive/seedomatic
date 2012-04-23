@@ -10,8 +10,10 @@ module SeedOMatic
       files_to_import(opts).each do |file|
         file_info = load_file(file)
 
-        if should_import?(opts, file_info)
-          results[file_info[:model_name]] = Seeder.new(file_info).import
+        file_info.each do |f|
+          if should_import?(opts, f)
+            results[f[:model_name]] = Seeder.new(f).import
+          end
         end
       end
 
@@ -35,12 +37,13 @@ module SeedOMatic
     end
 
     def load_file(file)
-      data = YAML.load_file(file)
-      {
-        :model_name => data.keys.first,
-        :match_on => data.first[1]['match_on'],
-        :items => data.first[1]['items']
-      }
+      data = YAML.load_file(file).map do |k, v|
+        {
+          :model_name => k,
+          :match_on => v['match_on'],
+          :items => v['items']
+        }
+      end
     end
 
   end

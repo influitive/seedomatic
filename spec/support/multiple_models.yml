@@ -1,0 +1,8 @@
+model_1:
+  items:
+    - name: test
+    - name: test2
+model_2:
+  items:
+    - name: test
+    - name: test2

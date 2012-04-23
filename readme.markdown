@@ -1,9 +1,7 @@
 # Seed-O-Matic
 *Run repeatable seeds across a variety of environments*
 
-Seeds are great, but they're usually written in a way that they can only be used on an initial deploy. Seed-O-Matic gives
-you tools to specify seed data in a way that's repeatable across environments, allowing you to change seed data in a safe
-way between all of your environments.
+Seeds and db:fixture:load are great, but they're usually written in a way that they can only be used on an initial deploy. Seed-O-Matic gives you tools to specify seed data in a way that's repeatable across environments, allowing you to change seed data in a safe way between all of your environments.
 
 ## Seed Files
 Seed files are set up as YAML files. By default, Seed-O-Matic will look for seed files in `config/seeds`, although you can
@@ -17,6 +15,15 @@ specify another directory when you run your seeds. Here's the structure of a typ
           code: my_model
         - name: My Model 2
           code: my_model_2
+    other_model:
+      match_on: [code, category]
+      items:
+        - name: Other Model 1
+          code: om_1
+          category: a
+        - name: Other Model 2
+          code: om_2
+          category: b
 
 * The seed file starts with a *model name*. This should match the name of a model in your application.
 * The *items* array lists all the items you'd like to seed. Attribute names should match the name of your attributes.

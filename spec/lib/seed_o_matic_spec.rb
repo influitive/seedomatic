@@ -30,6 +30,17 @@ describe SeedOMatic do
     context "no options (assumed config / seeds directory)" do
 
     end
+
+    describe "multiple records in a file" do
+      let(:opts) { { :file => 'spec/support/multiple_models.yml'} }
+
+      specify {
+        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'model_1')).and_return(mock_seeder)
+        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'model_2')).and_return(mock_seeder)
+
+        subject
+      }
+    end
   end
 
   describe "should_import?" do
