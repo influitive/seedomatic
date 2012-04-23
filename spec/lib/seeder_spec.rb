@@ -16,7 +16,7 @@ describe SeedOMatic::Seeder do
       context "single item" do
         let(:items) { [{'name' => 'foo'}] }
         specify {
-          MyModel.should_receive(:create).and_return(MyModel.new)
+          MyModel.should_receive(:new).and_return(MyModel.new)
           subject
         }
       end
@@ -24,7 +24,7 @@ describe SeedOMatic::Seeder do
       context "multiple items" do
         let(:items) { [{'name' => 'foo'}, {'name' => 'bar'} ] }
         specify {
-          MyModel.should_receive(:create).twice.and_return(MyModel.new)
+          MyModel.should_receive(:new).twice.and_return(MyModel.new)
           subject
         }
         it "should set fields properly" do
@@ -40,7 +40,7 @@ describe SeedOMatic::Seeder do
         let(:match_on) { 'code' }
 
         specify {
-          MyModel.should_receive(:find_or_create_by_code).with('uniquecode').and_return(MyModel.new)
+          MyModel.should_receive(:find_or_initialize_by_code).with('uniquecode').and_return(MyModel.new)
           subject
         }
       end
@@ -48,7 +48,7 @@ describe SeedOMatic::Seeder do
         let(:match_on) { ['code', 'code_category'] }
 
         specify {
-          MyModel.should_receive(:find_or_create_by_code_and_code_category).with('uniquecode', 'more_unique').and_return(MyModel.new)
+          MyModel.should_receive(:find_or_initialize_by_code_and_code_category).with('uniquecode', 'more_unique').and_return(MyModel.new)
           subject
         }
       end
@@ -60,17 +60,17 @@ describe SeedOMatic::Seeder do
 
     context "no matching fields" do
       let(:match_on) { nil }
-      it { should == 'create' }
+      it { should == 'new' }
     end
 
     context "one matching field" do
       let(:match_on) { 'code' }
-      it { should == 'find_or_create_by_code' }
+      it { should == 'find_or_initialize_by_code' }
     end
 
     context "multiple matching fields" do
       let(:match_on) { ['code', 'code_category'] }
-      it { should == 'find_or_create_by_code_and_code_category' }
+      it { should == 'find_or_initialize_by_code_and_code_category' }
     end
   end
 

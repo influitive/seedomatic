@@ -4,20 +4,33 @@ module SeedOMatic
   module Runner
     extend self
 
-    def run (opts)
+    def run (opts = {})
+      results = {}
+
       files_to_import(opts).each do |file|
-        puts file
-        Seeder.new(load_file(file)).import
+        file_info = load_file(file)
+
+        if should_import?(opts, file_info)
+          results[file_info[:model_name]] = Seeder.new(file_info).import
+        end
       end
+
+      results
     end
 
   protected
+
+    def should_import?(import_options, file_info)
+      (!import_options[:tagged_with]  || ([*import_options[:tagged_with]] - [*file_info[:tags]]).empty?) &&
+      (!import_options[:not_tagged_with] || ([*import_options[:not_tagged_with]] & [*file_info[:tags]]).empty?)
+    end
 
     def files_to_import(options)
       if options[:file]
         [options[:file]]
       else
-        Dir.open(options[:dir] || "~/Code/seedomatic/config/seeds").map{|f| "#{options[:dir]}/#{f}"}.select{|file| File.file? file}
+        dir = options[:dir] || "config/seeds"
+        Dir.open(dir).map{|f| "#{dir}/#{f}"}.select{|file| File.file? file}
       end
     end
 

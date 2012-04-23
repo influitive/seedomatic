@@ -40,7 +40,8 @@ module SeedOMatic
     end
 
     def model_class
-      model_name.is_a?(Class) ? model_name : Kernel.const_get(model_name)
+      return model_name if model_name.is_a? Class
+      model_name.to_s.classify.constantize
     end
 
   end

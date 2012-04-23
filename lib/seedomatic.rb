@@ -1,7 +1,7 @@
 require "seedomatic/version"
 
 require 'yaml'
-require 'active_support'
+require 'active_support/core_ext'
 
 module SeedOMatic
   autoload :Seeder, 'seedomatic/seeder'
