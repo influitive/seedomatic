@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Seedomatic::VERSION
   s.authors     = ["Ryan Brunner"]
   s.email       = ["ryan@ryanbrunner.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "http://github.com/ryanbrunner/seedomatic"
+  s.summary     = %q{Seed-O-Matic makes seeding easier.}
+  s.description = %q{Create repeatable seed fixtures that you can continually use and deploy to multiple environments and tenants.}
 
   s.rubyforge_project = "seedomatic"
 
