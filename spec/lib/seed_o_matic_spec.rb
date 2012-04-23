@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe SeedOMatic do
+  let!(:mock_seeder) { mock(SeedOMatic::Seeder).as_null_object }
+
   describe "run" do
     subject { described_class.run opts }
 
@@ -9,7 +11,7 @@ describe SeedOMatic do
 
       specify {
         SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'model_name',
-                                                                    :items => ['name' => 'Name 1', 'code' => 'code_1'])).and_return(SeedOMatic::Seeder.new)
+                                                                    :items => ['name' => 'Name 1', 'code' => 'code_1'])).and_return(mock_seeder)
         subject
       }
     end
@@ -18,8 +20,8 @@ describe SeedOMatic do
       let(:opts) { { :dir => 'spec/support/seed_directory' } }
 
       specify {
-        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'dir1')).and_return(SeedOMatic::Seeder.new)
-        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'dir2')).and_return(SeedOMatic::Seeder.new)
+        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'dir1')).and_return(mock_seeder)
+        SeedOMatic::Seeder.should_receive(:new).with(hash_including(:model_name => 'dir2')).and_return(mock_seeder)
 
         subject
       }

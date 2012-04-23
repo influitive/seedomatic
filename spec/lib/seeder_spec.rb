@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe SeedOMatic::Seeder do
+  let!(:mock_model) { mock(MyModel).as_null_object }
+
   let(:seeder) { described_class.new(data) }
   let(:data) { { :model_name => model_name, :items => items, :match_on => match_on } }
   let(:model_name) { "MyModel" }
@@ -16,7 +18,7 @@ describe SeedOMatic::Seeder do
       context "single item" do
         let(:items) { [{'name' => 'foo'}] }
         specify {
-          MyModel.should_receive(:new).and_return(MyModel.new)
+          MyModel.should_receive(:new).and_return(mock_model)
           subject
         }
       end
@@ -24,7 +26,7 @@ describe SeedOMatic::Seeder do
       context "multiple items" do
         let(:items) { [{'name' => 'foo'}, {'name' => 'bar'} ] }
         specify {
-          MyModel.should_receive(:new).twice.and_return(MyModel.new)
+          MyModel.should_receive(:new).twice.and_return(mock_model)
           subject
         }
         it "should set fields properly" do
