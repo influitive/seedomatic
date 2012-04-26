@@ -14,8 +14,8 @@ module SeedOMatic
       new_records = 0
       updated_records = 0
 
-      items.each do |i|
-        model = model_class.send(create_method, *create_args(i))
+      items.each do |attrs|
+        model = model_class.send(create_method, *create_args(attrs))
 
         if model.new_record?
           new_records += 1
@@ -24,7 +24,7 @@ module SeedOMatic
         end
 
         if model.new_record? || seed_mode == 'always'
-          model.attributes = i
+          model.attributes = process_lookups(attrs)
           model.save!
         end
       end
@@ -33,6 +33,16 @@ module SeedOMatic
     end
 
   protected
+
+    def process_lookups(attrs)
+      attrs.select{|k| k.ends_with? "_lookup"}.each do |key, value|
+        association = key.gsub("_lookup", "")
+        lookup_class = model_class.reflect_on_association(association).klass
+
+        attrs[association] = lookup_class.where(value).first
+      end
+      attrs
+    end
 
     def create_method
       match_on.empty? ? 'new' : "find_or_initialize_by_#{match_on.join('_and_')}"

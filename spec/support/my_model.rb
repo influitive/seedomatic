@@ -1,11 +1,20 @@
+class MyCategory
+
+end
+
 class MyModel
-  attr_accessor :name, :new_record
+  attr_accessor :name, :new_record, :category
 
   @@models = []
 
   def initialize(params = {})
     self.name = params['name']
+    self.category = params['category']
     self.new_record = true
+  end
+
+  def self.reset
+    @@models = []
   end
 
   def self.create(params = {})
@@ -16,6 +25,7 @@ class MyModel
 
   def attributes=(attr)
     self.name = attr['name']
+    self.category = attr['category']
   end
 
   def save!

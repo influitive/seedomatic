@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe SeedOMatic::Seeder do
+
+  before { MyModel.reset }
+
   let!(:mock_model) { mock(MyModel).as_null_object }
   let(:existing_mock) { MyModel.create(:name => 'Existing') }
   let(:new_mock) { MyModel.new(:name => 'New') }
@@ -37,6 +40,17 @@ describe SeedOMatic::Seeder do
           MyModel[0].name.should == 'foo'
           MyModel[1].name.should == 'bar'
         end
+      end
+
+      context "lookup fields" do
+        let(:items) { [{'name' => 'foo', 'category_lookup' => { 'code' => 'bar' }}]}
+        let(:category) { MyCategory.new }
+        specify {
+          MyModel.should_receive(:reflect_on_association).with('category').and_return(OpenStruct.new(:klass => MyCategory))
+          MyCategory.should_receive(:where).with(hash_including('code' => 'bar')).and_return(OpenStruct.new(:first => category))
+          subject
+          MyModel[0].category.should == category
+        }
       end
     end
 
