@@ -36,11 +36,22 @@ specify another directory when you run your seeds. Here's the structure of a typ
 
 ## Running Seeds
 
+### In Ruby
+
 Running seeds is as easy as calling:
 
     SeedOMatic.run
 
 This will look through the directory `config/seeds`, and import every file in that directory.
+
+### As a rake task
+
+SeedOMatic provides the following rake task:
+
+    rake seedomatic:seed
+
+This will run seeds in the `config/seeds` directory. You can provide `SEED_DIRECTORY`, `TAGGED_WITH`, and `NOT_TAGGED_WITH`
+arguments to the rake task to customize which seeds are run (See the sections below for valid values for these arguments).
 
 ### Seed Mode
 
