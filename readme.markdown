@@ -39,6 +39,16 @@ Running seeds is as easy as calling:
 
 This will look through the directory `config/seeds`, and import every file in that directory.
 
+### Seed Mode
+
+You can set a *seed mode* to control how SeedOMatic handles entries that already exist (i.e. models that matched the match_on
+fields). The following options are available:
+
+* `once` - Create new models, but don't update any existing models.
+* `always` - Always update, even if the model already exists.
+
+The default seed mode is `always`.
+
 ### Importing specific directories, or specific files.
 
 To load seed files from a specific directory, call:
