@@ -2,13 +2,16 @@ require 'spec_helper'
 
 describe SeedOMatic::Seeder do
   let!(:mock_model) { mock(MyModel).as_null_object }
+  let(:existing_mock) { MyModel.create(:name => 'Existing') }
+  let(:new_mock) { MyModel.new(:name => 'New') }
 
   let(:seeder) { described_class.new(data) }
-  let(:data) { { :model_name => model_name, :items => items, :match_on => match_on } }
+  let(:data) { { :model_name => model_name, :items => items, :seed_mode => seed_mode, :match_on => match_on } }
   let(:model_name) { "MyModel" }
   let(:items) {
     [{'name' => 'foo', 'code' => 'uniquecode', 'code_category' => 'more_unique'} ]
   }
+  let(:seed_mode) { nil }
   let(:match_on) { nil }
 
   describe "import" do
@@ -73,6 +76,38 @@ describe SeedOMatic::Seeder do
     context "multiple matching fields" do
       let(:match_on) { ['code', 'code_category'] }
       it { should == 'find_or_initialize_by_code_and_code_category' }
+    end
+  end
+
+  describe "seed_mode" do
+    subject { seeder.import }
+
+    let(:items) {
+      [{'name' => 'foo', 'code' => 'existing'}, {'name' => 'bar', 'code' => 'new'} ]
+    }
+    let(:match_on) { 'code' }
+    before {
+      MyModel.stub(:find_or_initialize_by_code).with('existing').and_return(existing_mock)
+      MyModel.stub(:find_or_initialize_by_code).with('new').and_return(new_mock)
+    }
+
+    context "once" do
+      let(:seed_mode) { 'once' }
+
+      it "should only save new models" do
+        existing_mock.should_not_receive(:save!)
+        new_mock.should_receive(:save!)
+        subject
+      end
+   end
+    context "always" do
+      let(:seed_mode) { 'always' }
+
+      it "should save multiple models" do
+        existing_mock.should_receive(:save!)
+        new_mock.should_receive(:save!)
+        subject
+      end
     end
   end
 

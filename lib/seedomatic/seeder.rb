@@ -1,12 +1,13 @@
 module SeedOMatic
   class Seeder
 
-    attr_accessor :model_name, :items, :match_on
+    attr_accessor :model_name, :items, :match_on, :seed_mode
 
     def initialize(data)
       @model_name = data[:model_name]
       @items = data[:items]
       @match_on = [*data[:match_on]]
+      @seed_mode = data[:seed_mode] || "always"
     end
 
     def import
@@ -22,8 +23,10 @@ module SeedOMatic
           updated_records += 1
         end
 
-        model.attributes = i
-        model.save!
+        if model.new_record? || seed_mode == 'always'
+          model.attributes = i
+          model.save!
+        end
       end
 
       { :count => items.length, :new => new_records, :updated => updated_records}
