@@ -4,12 +4,13 @@
 Seeds and db:fixture:load are great, but they're usually written in a way that they can only be used on an initial deploy. Seed-O-Matic gives you tools to specify seed data in a way that's repeatable across environments, allowing you to change seed data in a safe way between all of your environments.
 
 ## Seed Files
-Seed files are set up as YAML files. By default, Seed-O-Matic will look for seed files in `config/seeds`, although you can
+Seed files are set up as JSON or YAML files. By default, Seed-O-Matic will look for seed files in `config/seeds`, although you can
 specify another directory when you run your seeds. Here's the structure of a typical seed file:
 
     my_model:
       match_on: code
       tags: [initial_run, professional]
+      seed_mode: once
       items:
         - name: My Model 1
           code: my_model
@@ -17,6 +18,7 @@ specify another directory when you run your seeds. Here's the structure of a typ
           code: my_model_2
     other_model:
       match_on: [code, category]
+      seed_mode: always
       items:
         - name: Other Model 1
           code: om_1
@@ -30,6 +32,7 @@ specify another directory when you run your seeds. Here's the structure of a typ
 * You can specify a *match_on* attribute to prevent duplicate entries being created when seeds are run a second time.
   Seed-O-Matic will try to find an entry which matches your match_on fields, and update if one is found. Multiple items work as well.
 * You can tag your seed files as well, if you want to import a subset of seeds in particular circumstances.
+* `seed_mode` controls how SeedOMatic handles records that were matched based on the match_on fields. See 'Seed Mode' below for more details.
 
 ## Running Seeds
 
