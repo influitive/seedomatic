@@ -14,6 +14,8 @@ specify another directory when you run your seeds. Here's the structure of a typ
       items:
         - name: My Model 1
           code: my_model
+          other_model_lookup:
+            code: om_1
         - name: My Model 2
           code: my_model_2
     other_model:
@@ -62,6 +64,27 @@ fields). The following options are available:
 * `always` - Always update, even if the model already exists.
 
 The default seed mode is `always`.
+
+### Lookups
+
+If your seeds depend on other seeded data, you can use *lookups* to locate other records. Just add _lookup to the name of any property, and then provide parameters to look up that data. Seed-O-Matic will search for a record that matches the criteria you specified. Seed-O-Matic will automatically determine the type of record to look up based on the association in your model.
+
+*Warning*: Currently, lookups will only work correctly if the record exists at the time that the seed was run. If the item you're looking up is located in another seed file, ensure that it is imported first (by putting it in a higher alphabetical order).
+
+Examples:
+
+#### With key / value lookup parameters
+
+    category_lookup:
+      code: lookup_code
+
+This will set the `category` of the lookup to the first category with a `code` of `lookup_code`
+
+#### With a string
+
+    category_lookup: name ilike '%code%'
+
+This will look for category records matching the SQL fragment you passed in.
 
 ### Importing specific directories, or specific files.
 
