@@ -3,7 +3,7 @@ class MyCategory
 end
 
 class MyModel
-  attr_accessor :name, :new_record, :category
+  attr_accessor :name, :new_record, :category, :category_lookup
 
   @@models = []
 
@@ -26,6 +26,7 @@ class MyModel
   def attributes=(attr)
     self.name = attr['name']
     self.category = attr['category']
+    self.category_lookup = attr['category_lookup']
   end
 
   def save!
