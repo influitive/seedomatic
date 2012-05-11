@@ -50,6 +50,7 @@ describe SeedOMatic::Seeder do
           MyCategory.should_receive(:where).with(hash_including('code' => 'bar')).and_return(OpenStruct.new(:first => category))
           subject
           MyModel[0].category.should == category
+          MyModel[0].category_lookup.should be_nil
         }
       end
     end

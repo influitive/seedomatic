@@ -36,6 +36,8 @@ module SeedOMatic
 
     def process_lookups(attrs)
       attrs.select{|k| k.ends_with? "_lookup"}.each do |key, value|
+        attrs.delete(key)
+
         association = key.gsub("_lookup", "")
         lookup_class = model_class.reflect_on_association(association).klass
 
