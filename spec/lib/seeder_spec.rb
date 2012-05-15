@@ -46,7 +46,7 @@ describe SeedOMatic::Seeder do
         let(:items) { [{'name' => 'foo', 'category_lookup' => { 'code' => 'bar' }}]}
         let(:category) { MyCategory.new }
         specify {
-          MyModel.should_receive(:reflect_on_association).with('category').and_return(OpenStruct.new(:klass => MyCategory))
+          MyModel.should_receive(:reflect_on_association).with(:category).and_return(OpenStruct.new(:klass => MyCategory))
           MyCategory.should_receive(:where).with(hash_including('code' => 'bar')).and_return(OpenStruct.new(:first => category))
           subject
           MyModel[0].category.should == category
