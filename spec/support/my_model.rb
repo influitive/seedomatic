@@ -24,6 +24,7 @@ class MyModel
   end
 
   def attributes=(attr)
+    attr = attr.with_indifferent_access
     self.name = attr['name']
     self.category = attr['category']
     self.category_lookup = attr['category_lookup']
