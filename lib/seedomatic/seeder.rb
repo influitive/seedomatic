@@ -38,7 +38,7 @@ module SeedOMatic
       attrs.select{|k| k.ends_with? "_lookup"}.each do |key, value|
         attrs.delete(key)
 
-        association = key.gsub("_lookup", "")
+        association = key.gsub("_lookup", "").to_sym
         lookup_class = model_class.reflect_on_association(association).klass
 
         attrs[association] = lookup_class.where(value).first
