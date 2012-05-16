@@ -32,7 +32,7 @@ module SeedOMatic
         [options[:file]]
       else
         dir = options[:dir] || "config/seeds"
-        Dir.open(dir).map{|f| "#{dir}/#{f}"}.select{|file| File.file? file}
+        Dir["#{dir}/*.yml"].sort
       end
     end
 
