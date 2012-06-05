@@ -41,7 +41,7 @@ module SeedOMatic
         association = key.gsub("_attributes", "").to_sym
 
         if model_class.reflect_on_association(association).collection?
-          model_class.send(association).destroy_all
+          model.send(association).destroy_all
         end
       end
     end
