@@ -23,6 +23,8 @@ module SeedOMatic
           updated_records += 1
         end
 
+        clean_up_associations(model, attrs)
+
         if model.new_record? || seed_mode == 'always'
           model.attributes = process_lookups(attrs)
           model.save!
@@ -33,6 +35,16 @@ module SeedOMatic
     end
 
   protected
+
+    def clean_up_associations(model, attrs)
+      attrs.select{|a| a.ends_with?('attributes')}.each do |key, value|
+        association = key.gsub("_attributes", "").to_sym
+
+        if model_class.reflect_on_association(association).collection?
+          model_class.send(association).destroy_all
+        end
+      end
+    end
 
     def process_lookups(attrs)
       attrs.select{|k| k.ends_with? "_lookup"}.each do |key, value|
