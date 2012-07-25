@@ -15,7 +15,7 @@ module SeedOMatic
       updated_records = 0
 
       items.each do |attrs|
-        model = model_class.send(create_method, *create_args(attrs))
+        model = model_class.unscoped.send(create_method, *create_args(attrs))
 
         if model.new_record?
           new_records += 1
