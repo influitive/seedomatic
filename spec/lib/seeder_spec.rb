@@ -114,6 +114,22 @@ describe SeedOMatic::Seeder do
         new_mock.should_receive(:save!)
         subject
       end
+
+      describe "nested associations" do
+        let(:items) {
+          [{'name' => 'foo', 'code' => 'existing', 'foos_attributes' => [{'a' => 1}]}]
+        }
+
+        it "should not destroy existing ones" do
+          mock_association = mock('foos')
+
+          MyModel.stub(:reflect_on_association).and_return(stub('association', collection?: true))
+          existing_mock.stub(:foos).and_return(mock_association)
+          mock_association.should_not_receive(:destroy_all)
+
+          subject
+        end
+      end
    end
     context "always" do
       let(:seed_mode) { 'always' }
@@ -122,6 +138,22 @@ describe SeedOMatic::Seeder do
         existing_mock.should_receive(:save!)
         new_mock.should_receive(:save!)
         subject
+      end
+
+      describe "nested associations" do
+        let(:items) {
+          [{'name' => 'foo', 'code' => 'existing', 'foos_attributes' => [{'a' => 1}]}]
+        }
+
+        it "should destroy previously existing ones" do
+          mock_association = mock('foos')
+
+          MyModel.stub(:reflect_on_association).and_return(stub('association', collection?: true))
+          existing_mock.stub(:foos).and_return(mock_association)
+          mock_association.should_receive(:destroy_all)
+
+          subject
+        end
       end
     end
   end

@@ -23,9 +23,8 @@ module SeedOMatic
           updated_records += 1
         end
 
-        clean_up_associations(model, attrs)
-
         if model.new_record? || seed_mode == 'always'
+          clean_up_associations(model, attrs)
           model.attributes = process_lookups(attrs)
           model.save!
         end

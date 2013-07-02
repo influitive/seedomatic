@@ -17,6 +17,10 @@ class MyModel
     @@models = []
   end
 
+  def self.unscoped
+    self
+  end
+
   def self.create(params = {})
     @@models << m = new(params)
     m.new_record = false
