@@ -26,7 +26,9 @@ module SeedOMatic
         if model.new_record? || seed_mode == 'always'
           clean_up_associations(model, attrs)
           model.attributes = process_lookups(attrs)
-          model.save!
+          if !model.save
+            raise "Unable to save model: #{model} - #{model.errors.full_messages.join(", ")}"
+          end
         end
       end
 
