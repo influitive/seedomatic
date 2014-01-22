@@ -60,7 +60,7 @@ describe SeedOMatic::Seeder do
         let(:match_on) { 'code' }
 
         specify {
-          MyModel.should_receive(:find_or_initialize_by_code).with('uniquecode').and_return(MyModel.new)
+          MyModel.should_receive(:find_or_initialize_by).with('code' => 'uniquecode').and_return(MyModel.new)
           subject
         }
       end
@@ -68,7 +68,7 @@ describe SeedOMatic::Seeder do
         let(:match_on) { ['code', 'code_category'] }
 
         specify {
-          MyModel.should_receive(:find_or_initialize_by_code_and_code_category).with('uniquecode', 'more_unique').and_return(MyModel.new)
+          MyModel.should_receive(:find_or_initialize_by).with('code' => 'uniquecode', 'code_category' => 'more_unique').and_return(MyModel.new)
           subject
         }
       end
@@ -85,12 +85,12 @@ describe SeedOMatic::Seeder do
 
     context "one matching field" do
       let(:match_on) { 'code' }
-      it { should == 'find_or_initialize_by_code' }
+      it { should == 'find_or_initialize_by' }
     end
 
     context "multiple matching fields" do
       let(:match_on) { ['code', 'code_category'] }
-      it { should == 'find_or_initialize_by_code_and_code_category' }
+      it { should == 'find_or_initialize_by' }
     end
   end
 
@@ -102,8 +102,8 @@ describe SeedOMatic::Seeder do
     }
     let(:match_on) { 'code' }
     before {
-      MyModel.stub(:find_or_initialize_by_code).with('existing').and_return(existing_mock)
-      MyModel.stub(:find_or_initialize_by_code).with('new').and_return(new_mock)
+      MyModel.stub(:find_or_initialize_by).with('code' => 'existing').and_return(existing_mock)
+      MyModel.stub(:find_or_initialize_by).with('code' => 'new').and_return(new_mock)
     }
 
     context "once" do
@@ -163,22 +163,17 @@ describe SeedOMatic::Seeder do
 
     context "no matching fields" do
       let(:match_on) { nil }
-      it { should == [] }
+      it { should == {} }
     end
 
     context "one matching field" do
       let(:match_on) { 'code' }
-      it { should == [1] }
+      it { should == {'code' => 1} }
     end
 
     context "multiple matching fields" do
       let(:match_on) { ['code', 'code_category'] }
-      it { should == [1,2] }
-    end
-
-    context "order sensitivity" do
-      let(:match_on) { ['code_category', 'code'] }
-      it { should == [2,1] }
+      it { should == {'code' => 1, 'code_category' => 2} }
     end
   end
 

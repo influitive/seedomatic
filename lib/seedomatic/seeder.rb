@@ -15,7 +15,7 @@ module SeedOMatic
       updated_records = 0
 
       items.each do |attrs|
-        model = model_class.unscoped.send(create_method, *create_args(attrs))
+        model = model_class.unscoped.send(create_method, create_args(attrs))
 
         if model.new_record?
           new_records += 1
@@ -60,11 +60,14 @@ module SeedOMatic
     end
 
     def create_method
-      match_on.empty? ? 'new' : "find_or_initialize_by_#{match_on.join('_and_')}"
+      match_on.empty? ? 'new' : "find_or_initialize_by"
     end
 
     def create_args(item)
-      match_on.map{|m| item[m] }
+      match_on.inject({}) do |result,m|
+        result[m] = item[m]
+        result
+      end
     end
 
     def model_class
