@@ -40,6 +40,11 @@ class MyModel
     self
   end
 
+  def save
+    save!
+    true
+  end
+
   def new_record?
     @new_record
   end
