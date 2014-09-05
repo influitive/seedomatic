@@ -46,11 +46,25 @@ describe SeedOMatic::Seeder do
         let(:items) { [{'name' => 'foo', 'category_lookup' => { 'code' => 'bar' }}]}
         let(:category) { MyCategory.new }
         specify {
-          MyModel.should_receive(:reflect_on_association).with(:category).and_return(OpenStruct.new(:klass => MyCategory))
+          MyModel.should_receive(:reflect_on_association).with(:category).and_return(OpenStruct.new(:klass => MyCategory, :macro => :has_one))
           MyCategory.should_receive(:where).with(hash_including('code' => 'bar')).and_return(OpenStruct.new(:first => category))
           subject
           MyModel[0].category.should == category
           MyModel[0].category_lookup.should be_nil
+        }
+      end
+
+      context "has many lookup fields" do
+        let(:items) {[{'name' => 'foo', 'things_lookup' => [{'name' => 'thingy'}, {'code' => 'broom'}]}]}
+        let(:thing1) { MyThing.new }
+        let(:thing2) { MyThing.new }
+        specify {
+          MyModel.should_receive(:reflect_on_association).with(:things).and_return(OpenStruct.new(:klass => MyThing, :macro => :has_many))
+          MyThing.should_receive(:where).with(hash_including('name' => 'thingy')).and_return(OpenStruct.new(:first => thing1))
+          MyThing.should_receive(:where).with(hash_including('code' => 'broom')).and_return(OpenStruct.new(:first => thing2))
+          subject
+          MyModel[0].things.should == [thing1, thing2]
+          MyModel[0].things_lookup.should be_nil
         }
       end
     end

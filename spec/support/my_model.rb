@@ -2,8 +2,12 @@ class MyCategory
 
 end
 
+class MyThing
+
+end
+
 class MyModel
-  attr_accessor :name, :new_record, :category, :category_lookup
+  attr_accessor :name, :new_record, :category, :things, :category_lookup, :things_lookup
 
   @@models = []
 
@@ -31,7 +35,9 @@ class MyModel
     attr = attr.with_indifferent_access
     self.name = attr['name']
     self.category = attr['category']
+    self.things = attr['things']
     self.category_lookup = attr['category_lookup']
+    self.things_lookup = attr['things_lookup']
   end
 
   def save!

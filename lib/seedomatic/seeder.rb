@@ -52,9 +52,18 @@ module SeedOMatic
         attrs.delete(key)
 
         association = key.gsub("_lookup", "").to_sym
-        lookup_class = model_class.reflect_on_association(association).klass
+        reflection = model_class.reflect_on_association(association)
+        lookup_class = reflection.klass
+        association_type = reflection.macro
 
-        attrs[association] = lookup_class.where(value).first
+        if association_type == :has_many
+          attrs[association] = []
+          value.each do |v|
+            attrs[association] << lookup_class.where(v).first
+          end
+        else
+          attrs[association] = lookup_class.where(value).first
+        end
       end
       attrs
     end
