@@ -108,3 +108,6 @@ You can load tags using the `tagged_with`, and `not_tagged_with` options:
 
 * Referencing lookups from other seed files
 * Selective updating of data
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/influitive/seedomatic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
